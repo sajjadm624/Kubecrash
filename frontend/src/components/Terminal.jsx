@@ -19,7 +19,9 @@ export default function Terminal({ sessionId, levelMeta }) {
   const { termRef, write, writeln, showPrompt, clear } = useTerminal({ onCommand: handleCommand })
 
   useEffect(() => {
-    const ws = new WebSocket(`ws://localhost:8000/api/ws/${sessionId}`)
+    const apiBase = import.meta.env.VITE_API_URL || 'localhost:8000'
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
+    const ws = new WebSocket(`${wsProtocol}://${apiBase}/api/ws/${sessionId}`)
     wsRef.current = ws
 
     ws.onmessage = (e) => {
